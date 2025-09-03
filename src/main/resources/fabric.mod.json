@@ -1,0 +1,31 @@
+{
+	"schemaVersion": 1,
+	"id": "pbxeconomy",
+	"version": "${version}",
+	"name": "PBX Economy",
+	"description": "A server-side economy mod made due to a lack of server-side Fabric economy mods.",
+	"authors": [
+		"Powerbox1000"
+	],
+	"contact": {
+		"sources": "https://github.com/powerbox1000/pbx-economy"
+	},
+	"license": "lgpl-3.0-or-later",
+	"icon": "assets/pbxeconomy/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"io.github.powerbox1000.pbxeconomy.Economy"
+		]
+	},
+	"mixins": [
+		"pbxeconomy.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.17.2",
+		"minecraft": "~1.21.8",
+		"java": ">=21",
+		"fabric-api": "*",
+		"fabric-permissions-api-v0": "*"
+	}
+}

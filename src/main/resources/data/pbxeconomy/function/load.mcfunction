@@ -1,0 +1,1 @@
+scoreboard objectives add pbxeconomy.balance dummy
