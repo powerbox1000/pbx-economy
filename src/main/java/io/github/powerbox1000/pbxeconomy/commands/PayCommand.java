@@ -114,7 +114,7 @@ public class PayCommand {
                                         return 0;
                                     }
 
-                                    if (!PermsHelper.hasEmployeePerms(target.getUUID(), business)) {
+                                    if (!PermsHelper.hasEmployeePerms(ctx.getSource().getPlayerOrException().getUUID(), business)) {
                                         ctx.getSource().sendFailure(Component.literal("You do not have permission to pay from this business."));
                                         return 0;
                                     }
