@@ -57,7 +57,7 @@ public class BalanceCommand {
                         literal("business")
                         .then(
                             argument("name", StringArgumentType.string())
-                            .suggests(new BusinessCommand.BusinessSuggestionProvider())
+                            .suggests(new BusinessCommand.BusinessSuggestionProvider(false))
                             .then(
                                 argument("amount", IntegerArgumentType.integer())
                                 .executes(ctx -> {
