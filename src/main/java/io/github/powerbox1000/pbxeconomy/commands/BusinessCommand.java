@@ -24,7 +24,8 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.players.GameProfileCache;
+// import net.minecraft.server.players.GameProfileCache;
+import net.minecraft.server.players.PlayerList;
 
 public class BusinessCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -235,7 +236,8 @@ public class BusinessCommand {
 
         StringBuilder builder = new StringBuilder();
         for (UUID obj : list) {
-            builder.append(server.getProfileCache().get(obj).orElseThrow().getName()).append(", ");
+            // builder.append(server.getProfileCache().get(obj).orElseThrow().getName()).append(", ");
+            builder.append(server.getPlayerList().getPlayer(obj).getScoreboardName()).append(", ");
         }
         
         // Remove the trailing comma and space
@@ -278,25 +280,25 @@ public class BusinessCommand {
         public CompletableFuture<Suggestions> getSuggestions(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) {
             final DataHandler.BusinessEntry business = Economy.DATA_HANDLER.getBusinessState(StringArgumentType.getString(context, arg));
             if (business != null) {
-                final GameProfileCache profileCache = context.getSource().getServer().getProfileCache();
+                final PlayerList players = context.getSource().getServer().getPlayerList();
                 
                 if (java.util.Arrays.asList(roles).contains("employee")) {
                     for (UUID employeeId : business.employees) {
-                        final String name = profileCache.get(employeeId).orElseThrow().getName();
+                        final String name = players.getPlayer(employeeId).getScoreboardName();
                         if (SharedSuggestionProvider.matchesSubStr(builder.getRemaining(), name)) builder.suggest(name);
                     }
                 }
 
                 if (java.util.Arrays.asList(roles).contains("manager")) {
                     for (UUID managerId : business.managers) {
-                        final String name = profileCache.get(managerId).orElseThrow().getName();
+                        final String name = players.getPlayer(managerId).getScoreboardName();
                         if (SharedSuggestionProvider.matchesSubStr(builder.getRemaining(), name)) builder.suggest(name);
                     }
                 }
 
                 if (java.util.Arrays.asList(roles).contains("owner")) {
                     for (UUID ownerId : business.owners) {
-                        final String name = profileCache.get(ownerId).orElseThrow().getName();
+                        final String name = players.getPlayer(ownerId).getScoreboardName();
                         if (SharedSuggestionProvider.matchesSubStr(builder.getRemaining(), name)) builder.suggest(name);
                     }
                 }

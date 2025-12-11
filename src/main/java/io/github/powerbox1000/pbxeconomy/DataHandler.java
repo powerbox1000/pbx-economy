@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.UUID;
 
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -67,7 +66,7 @@ public class DataHandler extends SavedData {
 
     private DataHandler() {}
 
-    public CompoundTag writeNbt(CompoundTag nbt, HolderLookup.Provider registryLookup) {
+    public CompoundTag writeNbt(CompoundTag nbt) {
         CompoundTag playersNbt = new CompoundTag();
         players.forEach((uuid, data) -> {
             CompoundTag playerNbt = new CompoundTag();
@@ -110,7 +109,7 @@ public class DataHandler extends SavedData {
         return nbt;
     }
 
-    public static DataHandler createFromNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
+    public static DataHandler createFromNbt(CompoundTag tag) {
         DataHandler state = new DataHandler();
 
         CompoundTag playersNbt = tag.getCompound("players").get();
@@ -154,23 +153,23 @@ public class DataHandler extends SavedData {
         return state;
     }
 
-    public static DataHandler createNew(Context ctx) {
+    public static DataHandler createNew() {
         DataHandler state = new DataHandler();
         state.players = new HashMap<>();
         state.businesses = new HashMap<>();
         return state;
     }
 
-    public static Codec<DataHandler> getCodec(Context ctx) {
+    public static Codec<DataHandler> getCodec() {
         return new Codec<DataHandler>() {
             @Override
             public <T> DataResult<Pair<DataHandler, T>> decode(DynamicOps<T> ops, T input) {
-                return DataResult.success(new Pair<>(DataHandler.createFromNbt(CompoundTag.CODEC.parse(ops, input).getOrThrow(), ctx.levelOrThrow().registryAccess()), input));
+                return DataResult.success(new Pair<>(DataHandler.createFromNbt(CompoundTag.CODEC.parse(ops, input).getOrThrow()), input));
             }
 
             @Override
             public <T> DataResult<T> encode(DataHandler data, DynamicOps<T> ops, T prefix) {
-                return CompoundTag.CODEC.encode(data.writeNbt(new CompoundTag(), ctx.levelOrThrow().registryAccess()), ops, prefix);
+                return CompoundTag.CODEC.encode(data.writeNbt(new CompoundTag()), ops, prefix);
             }
         };
     }
@@ -178,7 +177,7 @@ public class DataHandler extends SavedData {
     private static final SavedDataType<DataHandler> type = new SavedDataType<>(
             Economy.MOD_ID,
             DataHandler::createNew,
-            DataHandler::getCodec,
+            DataHandler.getCodec(),
             null
     );
  
